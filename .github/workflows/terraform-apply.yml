@@ -1,0 +1,49 @@
+name: 'Apply terraform'
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        type: string
+        required: false
+        default: 'tf'
+      stage:
+        type: string
+        required: false
+        default: 'dev'
+    secrets:
+      aws-id:
+        required: true
+      aws-secret:
+        required: true
+      git-read-key:
+       required: true
+
+jobs:
+  apply-terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws-id }}
+          aws-secret-access-key: ${{ secrets.aws-secret }}
+          aws-region: eu-central-1
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.git-read-key }}
+
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform init
+        run: |
+          ls
+          pwd
+          terraform init
+          terraform apply -auto-approve
+        working-directory: ${{ inputs.working-directory }}
