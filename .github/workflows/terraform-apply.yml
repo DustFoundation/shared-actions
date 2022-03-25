@@ -5,7 +5,12 @@ on:
     inputs:
       working-directory:
         type: string
-        required: true
+        required: false
+        default: tf
+      apply-command:
+        type: string
+        required: false
+        default: terraform apply -auto-approve
     secrets:
       aws-id:
         required: true
@@ -38,5 +43,5 @@ jobs:
       - name: Terraform init
         run: |
           terraform init
-          terraform apply -auto-approve
+          ${{ inputs.apply-command }}
         working-directory: ${{ inputs.working-directory }}
