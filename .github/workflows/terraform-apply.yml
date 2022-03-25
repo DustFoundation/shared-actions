@@ -5,7 +5,8 @@ on:
     inputs:
       working-directory:
         type: string
-        required: true
+        required: false
+        default: tf
       apply-command:
         type: string
         required: false
