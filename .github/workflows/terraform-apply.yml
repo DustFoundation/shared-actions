@@ -5,12 +5,7 @@ on:
     inputs:
       working-directory:
         type: string
-        required: false
-        default: 'tf'
-      stage:
-        type: string
-        required: false
-        default: 'dev'
+        required: true
     secrets:
       aws-id:
         required: true
