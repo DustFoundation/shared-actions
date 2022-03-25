@@ -3,6 +3,8 @@ name: Create pre-release
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - '.github/workflows/_release.yml'
   workflow_dispatch:
 
 jobs:
