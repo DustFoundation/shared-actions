@@ -10,7 +10,9 @@ on:
       apply-command:
         type: string
         required: false
-        default: terraform apply -auto-approve
+        default: |
+          terraform init
+          terraform apply -auto-approve
     secrets:
       aws-id:
         required: true
@@ -42,6 +44,7 @@ jobs:
 
       - name: Terraform init
         run: |
-          terraform init
+          aws s3 ls
+          aws sts get-caller-identity
           ${{ inputs.apply-command }}
         working-directory: ${{ inputs.working-directory }}
