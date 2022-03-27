@@ -14,10 +14,10 @@ jobs:
   apply:
     uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.5
     with:
-      apply-command: ./apply-prod.sh
+      apply-command: ./apply-stage.sh
     secrets:
-      aws-id: ${{ secrets.AWS_ID_PROD }}
-      aws-secret: ${{ secrets.AWS_SECRET_PROD }}
+      aws-id: ${{ secrets.AWS_ID_STAGE }}
+      aws-secret: ${{ secrets.AWS_SECRET_STAGE }}
       git-read-key: ${{ secrets.GIT_READ_KEY }}
 ```
 If you have environments in folders
