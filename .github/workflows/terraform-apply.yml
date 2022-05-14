@@ -1,4 +1,4 @@
-name: 'Apply terraform'
+name: Terraform Apply
 
 on:
   workflow_call:
@@ -19,11 +19,12 @@ on:
       aws-secret:
         required: true
       git-read-key:
-       required: true
+        required: true
 
 jobs:
-  apply-terraform:
+  terraform-apply:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,13 +37,13 @@ jobs:
           aws-region: eu-central-1
 
       - name: Install SSH key
-        uses: webfactory/ssh-agent@v0.5.2
+        uses: webfactory/ssh-agent@v0.5.4
         with:
           ssh-private-key: ${{ secrets.git-read-key }}
 
       - uses: hashicorp/setup-terraform@v1
 
-      - name: Terraform init
+      - name: Terraform Init & Apply
         run: |
           aws s3 ls
           aws sts get-caller-identity
