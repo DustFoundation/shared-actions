@@ -8,7 +8,8 @@ on:
         required: true
       node-version:
         type: number
-        required: true
+        required: false
+        default: 16
     secrets:
       aws-id:
         required: true
