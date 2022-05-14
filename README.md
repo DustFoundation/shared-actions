@@ -2,94 +2,57 @@
 
 - [Terraform Apply](#terraform-apply) – Terraform apply
 - [Terraform Plan](#terraform-plan) – Terraform plan
-- [Serverless Deploy (Node.js)](#serverless-deploy-nodejs) – Serverless deploy for Node.js services
+- [Serverless Deploy (Node.js)](#serverless-deploy-nodejs) – Serverless deploy for Node.js apps
 - [CI (Node.js)](#ci-nodejs) – Test & Lint for Node.js apps
-- [Pre-release](#pre-release) – Create pre-release for stage/prod deployment
+- [Create Release](#create-release) – Create GitHub release
 
 ---
 
 ## Terraform Apply
 
-### Basic Usage
+| OPTION            | TYPE                                                     | EXAMPLE       |
+|-------------------|----------------------------------------------------------|---------------|
+| working-directory | ?string (default: `tf`)                                  | `tf/_env/dev` |
+| apply-command     | ?string (default: `terraform init` \| `terraform apply`) |               |
 
 ```yaml
 jobs:
   apply:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.5
+    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.6
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
       git-read-key: ${{ secrets.GIT_READ_KEY }}
 ```
 
-### If you have environments in folders
+- If you have a script for configure backend:
 
 ```yaml
-jobs:
-  apply:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.5
-    with:
-      working-directory: tf/_env/dev
-    secrets:
-      aws-id: ${{ secrets.AWS_ID_DEV }}
-      aws-secret: ${{ secrets.AWS_SECRET_DEV }}
-      git-read-key: ${{ secrets.GIT_READ_KEY }}
-```
-
-### If you have a script for configure backend
-
-```yaml
-jobs:
-  apply:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.5
     with:
       apply-command: ./apply-stage.sh
-    secrets:
-      aws-id: ${{ secrets.AWS_ID_STAGE }}
-      aws-secret: ${{ secrets.AWS_SECRET_STAGE }}
-      git-read-key: ${{ secrets.GIT_READ_KEY }}
 ```
 
-### If you want to define terraform command for each stage
+- If you want to define terraform command for each stage
 
 ```yaml
-jobs:
-  apply:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.5
     with:
       apply-command: |
         terraform init -backend-config="key=stage/frontend.tfstate"
         terraform apply -auto-approve -var-file stage.tfvars
-    secrets:
-      aws-id: ${{ secrets.AWS_ID_STAGE }}
-      aws-secret: ${{ secrets.AWS_SECRET_STAGE }}
-      git-read-key: ${{ secrets.GIT_READ_KEY }}
 ```
 
 ---
 
 ## Terraform Plan
 
-### Basic Usage
+| OPTION            | TYPE                    | EXAMPLE       |
+|-------------------|-------------------------|---------------|
+| working-directory | ?string (default: `tf`) | `tf/_env/dev` |
 
 ```yaml
 jobs:
   plan:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v0.0.5
-    secrets:
-      aws-id: ${{ secrets.AWS_ID_DEV }}
-      aws-secret: ${{ secrets.AWS_SECRET_DEV }}
-      git-read-key: ${{ secrets.GIT_READ_KEY }}
-```
-
-### If you have environments in folders
-
-```yaml
-jobs:
-  plan:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v0.0.5
-    with:
-      working-directory: tf/_env/dev
+    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v0.0.6
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -100,26 +63,15 @@ jobs:
 
 ## Serverless Deploy (Node.js)
 
-### Basic Usage
+| OPTION       | TYPE   | EXAMPLE                  |
+|--------------|--------|--------------------------|
+| stage        | enum   | `dev`, `stage` or `prod` |
+| node-version | number | 16                       |
 
 ```yaml
 jobs:
   deploy:
-    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.5
-    with:
-      stage: dev
-    secrets:
-      aws-id: ${{ secrets.AWS_ID_DEV }}
-      aws-secret: ${{ secrets.AWS_SECRET_DEV }}
-      git-read-key: ${{ secrets.GIT_READ_KEY }}
-```
-
-### Custom Node.js version (default is 16)
-
-```yaml
-jobs:
-  deploy:
-    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.5
+    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.6
     with:
       stage: dev
       node-version: 16
@@ -133,12 +85,14 @@ jobs:
 
 ## CI (Node.js)
 
-### Basic Usage
+| OPTION       | TYPE   | EXAMPLE |
+|--------------|--------|---------|
+| node-version | number | 16      |
 
 ```yaml
 jobs:
-  test:
-    uses: DustFoundation/shared-actions/.github/workflows/test-nodejs.yml@v0.0.5
+  ci:
+    uses: DustFoundation/shared-actions/.github/workflows/ci-nodejs.yml@v0.0.6
     with:
       node-version: 16
     secrets:
@@ -149,14 +103,16 @@ jobs:
 
 ---
 
-## Pre-release
+## Create Release
 
-### Basic Usage
+| OPTION     | TYPE                     | EXAMPLE |
+|------------|--------------------------|---------|
+| prerelease | ?boolean (default: true) | true    |
 
 ```yaml
 jobs:
-  pre-release:
-    uses: DustFoundation/shared-actions/.github/workflows/pre-release.yml@v0.0.5
+  release:
+    uses: DustFoundation/shared-actions/.github/workflows/create-release.yml@v0.0.6
 ```
 
 ---

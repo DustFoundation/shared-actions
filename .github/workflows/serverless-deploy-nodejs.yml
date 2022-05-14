@@ -8,8 +8,7 @@ on:
         required: true
       node-version:
         type: number
-        required: false
-        default: 16
+        required: true
     secrets:
       aws-id:
         required: true
@@ -19,7 +18,7 @@ on:
         required: true
 
 jobs:
-  serverless-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
