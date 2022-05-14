@@ -1,10 +1,15 @@
-name: Pre-release
+name: Create Release
 
 on:
   workflow_call:
+    inputs:
+      prerelease:
+        type: boolean
+        required: false
+        default: true
 
 jobs:
-  pre-release:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,4 +33,4 @@ jobs:
           tag_name: ${{ steps.version.outputs.version_tag }}
           release_name: Release ${{ steps.version.outputs.version_tag }}
           draft: false
-          prerelease: true
+          prerelease: ${{ inputs.prerelease }}
