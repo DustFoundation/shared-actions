@@ -46,4 +46,4 @@ jobs:
         run: npm ci
 
       - name: Deploy
-        run: npm run sls:deploy -- --stage=${{ env.STAGE }} ${{ inputs.stage == "prod" && '--conceal' || '' }}
+        run: npm run sls:deploy -- --stage=${{ inputs.stage }} ${{ inputs.stage == 'prod' && '--conceal' || '' }}
