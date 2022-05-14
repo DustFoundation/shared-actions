@@ -1,8 +1,9 @@
 # shared-actions
 
-- [Terraform Apply](#terraform-apply) – Terraform apply configuration
-- [Terraform Plan](#terraform-plan) – Terraform plan configuration
+- [Terraform Apply](#terraform-apply) – Terraform apply
+- [Terraform Plan](#terraform-plan) – Terraform plan
 - [Serverless Deploy (Node.js)](#serverless-deploy-nodejs) – Serverless deploy for Node.js services
+- [Pre-release](#pre-release) – Create pre-release for stage/prod deployment
 
 ---
 
@@ -72,7 +73,7 @@ jobs:
 
 ```yaml
 jobs:
-  apply:
+  plan:
     uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v0.0.5
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
@@ -84,7 +85,7 @@ jobs:
 
 ```yaml
 jobs:
-  apply:
+  plan:
     uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v0.0.5
     with:
       working-directory: tf/_env/dev
@@ -102,7 +103,7 @@ jobs:
 
 ```yaml
 jobs:
-  apply:
+  deploy:
     uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.5
     with:
       stage: dev
@@ -116,7 +117,7 @@ jobs:
 
 ```yaml
 jobs:
-  apply:
+  deploy:
     uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.5
     with:
       stage: dev
@@ -125,6 +126,18 @@ jobs:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
       git-read-key: ${{ secrets.GIT_READ_KEY }}
+```
+
+---
+
+## Pre-release
+
+### Basic Usage
+
+```yaml
+jobs:
+  pre-release:
+    uses: DustFoundation/shared-actions/.github/workflows/pre-release.yml@v0.0.5
 ```
 
 ---
