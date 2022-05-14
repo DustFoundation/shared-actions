@@ -3,6 +3,7 @@
 - [Terraform Apply](#terraform-apply) – Terraform apply
 - [Terraform Plan](#terraform-plan) – Terraform plan
 - [Serverless Deploy (Node.js)](#serverless-deploy-nodejs) – Serverless deploy for Node.js services
+- [CI (Node.js)](#ci-nodejs) – Test & Lint for Node.js apps
 - [Pre-release](#pre-release) – Create pre-release for stage/prod deployment
 
 ---
@@ -121,6 +122,24 @@ jobs:
     uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.5
     with:
       stage: dev
+      node-version: 16
+    secrets:
+      aws-id: ${{ secrets.AWS_ID_DEV }}
+      aws-secret: ${{ secrets.AWS_SECRET_DEV }}
+      git-read-key: ${{ secrets.GIT_READ_KEY }}
+```
+
+---
+
+## CI (Node.js)
+
+### Basic Usage
+
+```yaml
+jobs:
+  test:
+    uses: DustFoundation/shared-actions/.github/workflows/test-nodejs.yml@v0.0.5
+    with:
       node-version: 16
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
