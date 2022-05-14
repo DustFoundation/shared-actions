@@ -46,11 +46,13 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
+        continue-on-error: true
         working-directory: ${{ inputs.working-directory }}
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+        continue-on-error: true
         working-directory: ${{ inputs.working-directory }}
 
       - name: Terraform Plan
@@ -71,7 +73,7 @@ jobs:
             #### Terraform Validation: \`${{ steps.validate.outcome }}\` ${{ steps.validate.outcome == 'Success' && '✅' || '❌'}}
             #### Terraform Plan: \`${{ steps.plan.outcome }}\` ${{ steps.plan.outcome == 'Success' && '✅' || '❌'}}
 
-            <details><summary>Show Plan</summary>
+            <details><summary>⏩⏩⏩ Show Plan ⏪⏪⏪</summary>
 
             \`\`\`${process.env.PLAN}\`\`\`
 
@@ -82,3 +84,12 @@ jobs:
               repo: context.repo.repo,
               body: output
             })
+
+      - name: Check on failures
+        if: steps.fmt.outcome != 'success' || steps.init.outcome != 'success' || steps.validate.outcome != 'success' || steps.plan.outcome != 'success'
+        run: |
+          echo "#### Terraform Format and Style: ${{ steps.fmt.outcome == 'Success' && '✅' || '❌' }}"
+          echo "#### Terraform Initialization: ${{ steps.init.outcome == 'Success' && '✅' || '❌' }}"
+          echo "#### Terraform Validation: ${{ steps.validate.outcome == 'Success' && '✅' || '❌' }}"
+          echo "#### Terraform Plan: ${{ steps.plan.outcome == 'Success' && '✅' || '❌' }}"
+          exit 1
