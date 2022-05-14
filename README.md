@@ -10,10 +10,10 @@
 
 ## Terraform Apply
 
-| OPTION            | TYPE                                                     | EXAMPLE       |
-|-------------------|----------------------------------------------------------|---------------|
-| working-directory | ?string (default: `tf`)                                  | `tf/_env/dev` |
-| apply-command     | ?string (default: `terraform init` \| `terraform apply`) |               |
+| OPTION            | TYPE                                                     |
+|-------------------|----------------------------------------------------------|
+| working-directory | ?string (default: `tf`)                                  |
+| apply-command     | ?string (default: `terraform init` \| `terraform apply`) |
 
 ```yaml
 jobs:
@@ -23,6 +23,13 @@ jobs:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
       git-read-key: ${{ secrets.GIT_READ_KEY }}
+```
+
+- If you have environments in folders:
+
+```yaml
+    with:
+      working-directory: tf/_env/dev
 ```
 
 - If you have a script for configure backend:
@@ -45,9 +52,9 @@ jobs:
 
 ## Terraform Plan
 
-| OPTION            | TYPE                    | EXAMPLE       |
-|-------------------|-------------------------|---------------|
-| working-directory | ?string (default: `tf`) | `tf/_env/dev` |
+| OPTION            | TYPE                    |
+|-------------------|-------------------------|
+| working-directory | ?string (default: `tf`) |
 
 ```yaml
 jobs:
@@ -59,14 +66,21 @@ jobs:
       git-read-key: ${{ secrets.GIT_READ_KEY }}
 ```
 
+- If you have environments in folders:
+
+```yaml
+    with:
+      working-directory: tf/_env/dev
+```
+
 ---
 
 ## Serverless Deploy (Node.js)
 
-| OPTION       | TYPE   | EXAMPLE                  |
-|--------------|--------|--------------------------|
-| stage        | enum   | `dev`, `stage` or `prod` |
-| node-version | number | 16                       |
+| OPTION       | TYPE                             |
+|--------------|----------------------------------|
+| stage        | enum: `dev` \| `stage` \| `prod` |
+| node-version | ?number (default: `16`)          |
 
 ```yaml
 jobs:
@@ -74,7 +88,6 @@ jobs:
     uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.6
     with:
       stage: dev
-      node-version: 16
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -85,16 +98,14 @@ jobs:
 
 ## CI (Node.js)
 
-| OPTION       | TYPE   | EXAMPLE |
-|--------------|--------|---------|
-| node-version | number | 16      |
+| OPTION       | TYPE                    |
+|--------------|-------------------------|
+| node-version | ?number (default: `16`) |
 
 ```yaml
 jobs:
   ci:
     uses: DustFoundation/shared-actions/.github/workflows/ci-nodejs.yml@v0.0.6
-    with:
-      node-version: 16
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -105,9 +116,9 @@ jobs:
 
 ## Create Release
 
-| OPTION     | TYPE                     | EXAMPLE |
-|------------|--------------------------|---------|
-| prerelease | ?boolean (default: true) | true    |
+| OPTION     | TYPE                       |
+|------------|----------------------------|
+| prerelease | ?boolean (default: `true`) |
 
 ```yaml
 jobs:
