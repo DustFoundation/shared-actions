@@ -4,6 +4,7 @@
 - [Terraform Plan](#terraform-plan) – Terraform plan
 - [Serverless Deploy (Node.js)](#serverless-deploy-nodejs) – Serverless deploy for Node.js apps
 - [CI (Node.js)](#ci-nodejs) – Test & Lint for Node.js apps
+- [Publish (NPM)](#publish-npm) – Test, Build & Publish to NPM registry for Node.js apps
 - [Create Release](#create-release) – Create GitHub release
 
 ---
@@ -110,6 +111,20 @@ jobs:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
       git-read-key: ${{ secrets.GIT_READ_KEY }}
+```
+
+---
+
+## Publish (NPM)
+
+| OPTION       | TYPE                    |
+|--------------|-------------------------|
+| node-version | ?number (default: `16`) |
+
+```yaml
+jobs:
+  ci:
+    uses: DustFoundation/shared-actions/.github/workflows/publish-npm.yml@v0.0.6
 ```
 
 ---
