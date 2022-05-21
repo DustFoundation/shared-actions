@@ -4,6 +4,7 @@
 - [Terraform Plan](#terraform-plan) – Terraform plan
 - [Serverless Deploy (Node.js)](#serverless-deploy-nodejs) – Serverless deploy for Node.js apps
 - [CI (Node.js)](#ci-nodejs) – Test & Lint for Node.js apps
+- [Publish (NPM)](#publish-npm) – Test, Build & Publish to NPM registry for Node.js apps
 - [Create Release](#create-release) – Create GitHub release
 
 ---
@@ -18,7 +19,7 @@
 ```yaml
 jobs:
   apply:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v0.0.6
+    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v1.1.0
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -59,7 +60,7 @@ jobs:
 ```yaml
 jobs:
   plan:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v0.0.6
+    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v1.1.0
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -85,7 +86,7 @@ jobs:
 ```yaml
 jobs:
   deploy:
-    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v0.0.6
+    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v1.1.0
     with:
       stage: dev
     secrets:
@@ -105,11 +106,27 @@ jobs:
 ```yaml
 jobs:
   ci:
-    uses: DustFoundation/shared-actions/.github/workflows/ci-nodejs.yml@v0.0.6
+    uses: DustFoundation/shared-actions/.github/workflows/ci-nodejs.yml@v1.1.0
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
       git-read-key: ${{ secrets.GIT_READ_KEY }}
+```
+
+---
+
+## Publish (NPM)
+
+| OPTION       | TYPE                    |
+|--------------|-------------------------|
+| node-version | ?number (default: `16`) |
+
+```yaml
+jobs:
+  publish:
+    uses: DustFoundation/shared-actions/.github/workflows/publish-npm.yml@v1.1.0
+    secrets:
+      npm-publish-token: ${{ secrets.NPM_PUBLISH_TOKEN }}
 ```
 
 ---
@@ -123,7 +140,7 @@ jobs:
 ```yaml
 jobs:
   release:
-    uses: DustFoundation/shared-actions/.github/workflows/create-release.yml@v0.0.6
+    uses: DustFoundation/shared-actions/.github/workflows/create-release.yml@v1.1.0
 ```
 
 ---
