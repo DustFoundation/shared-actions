@@ -35,7 +35,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.git-read-key }}
 
-      - uses: hashicorp/setup-terraform@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Fmt
         id: fmt
@@ -61,13 +62,22 @@ jobs:
         continue-on-error: true
         working-directory: ${{ inputs.working-directory }}
 
-      - uses: actions/github-script@0.9.0
+      - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+            })
+
             const output = `#### Terraform Format and Style: \`${{ steps.fmt.outcome }}\` ${{ steps.fmt.outcome == 'Success' && '✅' || '❌'}}
             #### Terraform Initialization: \`${{ steps.init.outcome }}\` ${{ steps.init.outcome == 'Success' && '✅' || '❌'}}
             #### Terraform Validation: \`${{ steps.validate.outcome }}\` ${{ steps.validate.outcome == 'Success' && '✅' || '❌'}}
@@ -78,12 +88,21 @@ jobs:
             \`\`\`${process.env.PLAN}\`\`\`
 
             </details>`;
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
 
       - name: Check on failures
         if: steps.fmt.outcome != 'success' || steps.init.outcome != 'success' || steps.validate.outcome != 'success' || steps.plan.outcome != 'success'
