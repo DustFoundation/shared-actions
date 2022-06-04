@@ -42,7 +42,7 @@ jobs:
         id: fmt
         run: terraform fmt -check -recursive
         continue-on-error: true
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: tf
 
       - name: Terraform Init
         id: init
