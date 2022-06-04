@@ -41,7 +41,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.git-read-key }}
 
-      - uses: hashicorp/setup-terraform@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init & Apply
         run: |
