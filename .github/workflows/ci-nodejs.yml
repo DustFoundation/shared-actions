@@ -88,6 +88,6 @@ jobs:
         if: steps.coverage-enabled.outputs.coverage-enabled
         uses: sidx1024/report-nyc-coverage-github-action@873d5033d5a27e263ec68115ae1d378100cacff2
         with:
-          coverage_file: coverage/report/coverage-summary.json
+          coverage_file: tmp/coverage-report/coverage-summary.json
           comment_template_file: template.md
           files_coverage_table_output_type_order: SBFL
