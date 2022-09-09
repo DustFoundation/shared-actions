@@ -19,7 +19,7 @@
 ```yaml
 jobs:
   apply:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v1.1.2
+    uses: DustFoundation/shared-actions/.github/workflows/terraform-apply.yml@v1.1.5
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -60,7 +60,7 @@ jobs:
 ```yaml
 jobs:
   plan:
-    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v1.1.2
+    uses: DustFoundation/shared-actions/.github/workflows/terraform-plan.yml@v1.1.5
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -86,7 +86,7 @@ jobs:
 ```yaml
 jobs:
   deploy:
-    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v1.1.2
+    uses: DustFoundation/shared-actions/.github/workflows/serverless-deploy-nodejs.yml@v1.1.5
     with:
       stage: dev
     secrets:
@@ -106,7 +106,7 @@ jobs:
 ```yaml
 jobs:
   ci:
-    uses: DustFoundation/shared-actions/.github/workflows/ci-nodejs.yml@v1.1.2
+    uses: DustFoundation/shared-actions/.github/workflows/ci-nodejs.yml@v1.1.5
     secrets:
       aws-id: ${{ secrets.AWS_ID_DEV }}
       aws-secret: ${{ secrets.AWS_SECRET_DEV }}
@@ -124,7 +124,7 @@ jobs:
 ```yaml
 jobs:
   publish:
-    uses: DustFoundation/shared-actions/.github/workflows/publish-npm.yml@v1.1.2
+    uses: DustFoundation/shared-actions/.github/workflows/publish-npm.yml@v1.1.5
     secrets:
       npm-publish-token: ${{ secrets.NPM_PUBLISH_TOKEN }}
 ```
@@ -140,7 +140,7 @@ jobs:
 ```yaml
 jobs:
   release:
-    uses: DustFoundation/shared-actions/.github/workflows/create-release.yml@v1.1.2
+    uses: DustFoundation/shared-actions/.github/workflows/create-release.yml@v1.1.5
 ```
 
 ---

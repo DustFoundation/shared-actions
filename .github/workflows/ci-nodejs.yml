@@ -44,8 +44,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check is coverage enabled
+        id: coverage-enabled
+        run: echo "::set-output name=coverage-enabled::$(npm run | grep "test:cov")"
+
       - name: Test
+        if: steps.coverage-enabled.outputs.coverage-enabled == ''
         run: npm run test --if-present
+
+      - name: Test + Coverage
+        if: steps.coverage-enabled.outputs.coverage-enabled
+        run: npm run test:cov --if-present
 
       - name: Build
         run: |
@@ -54,3 +63,31 @@ jobs:
 
       - name: Lint
         run: npm run lint --if-present -- --max-warnings=0
+
+      - name: Coverage - Generate NYC report
+        if: steps.coverage-enabled.outputs.coverage-enabled
+        run: |
+          npx nyc report \
+            --reporter json-summary \
+            --exclude-after-remap false
+
+      - name: Coverage - Create Comment Template
+        if: steps.coverage-enabled.outputs.coverage-enabled
+        run: |
+          touch template.md
+          echo "## Coverage Report
+
+          Commit: [{{short_commit_sha}}]({{commit_link}})
+
+          <details>
+          <summary>Details (all files)</summary>
+          {{files_coverage_table}}
+          </details>" >> template.md
+
+      - name: Coverage - Send to Pull Request
+        if: steps.coverage-enabled.outputs.coverage-enabled
+        uses: sidx1024/report-nyc-coverage-github-action@873d5033d5a27e263ec68115ae1d378100cacff2
+        with:
+          coverage_file: tmp/coverage-report/coverage-summary.json
+          comment_template_file: template.md
+          files_coverage_table_output_type_order: SBFL
