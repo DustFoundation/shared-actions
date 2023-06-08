@@ -68,11 +68,12 @@ jobs:
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const { readFile } = require("fs/promises")
+            const data = await readFile('plan.out')
+            
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -81,6 +82,8 @@ jobs:
             const botComment = comments.find(comment => {
               return comment.user.type === 'Bot' && comment.body.includes('|${{ inputs.operation }}| Terraform Format and Style')
             })
+            
+            const plan = "terraform\n" + data.length > 65000 ? `${data.substring(0, 65000)}...` : data
 
             const output = `#### |${{ inputs.operation }}| Terraform Format and Style: \`${{ steps.fmt.outcome }}\` ${{ steps.fmt.outcome == 'Success' && '✅' || '❌'}}
             #### Terraform Initialization: \`${{ steps.init.outcome }}\` ${{ steps.init.outcome == 'Success' && '✅' || '❌'}}
@@ -89,7 +92,7 @@ jobs:
 
             <details><summary>⏩⏩⏩ Show Plan ⏪⏪⏪</summary>
 
-            \`\`\`${process.env.PLAN}\`\`\`
+            \`\`\`${plan}\`\`\`
 
             </details>`;
             if (botComment) {
