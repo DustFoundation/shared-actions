@@ -84,6 +84,7 @@ jobs:
           script: |
             const { readFile } = require("fs/promises")
             const data = await readFile('plan.out', 'utf8')
+            const MAX_PLAN_LENGTH = 60000
             
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
