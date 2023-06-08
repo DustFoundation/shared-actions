@@ -77,7 +77,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { readFile } = require("fs/promises")
-            const data = await readFile('plan.out')
+            const planOut = await readFile('plan.out')
             
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -88,7 +88,7 @@ jobs:
               return comment.user.type === 'Bot' && comment.body.includes('|${{ inputs.operation }}| Terraform Format and Style')
             })
             
-            const plan = "terraform\n" + data.length > 65000 ? `${data.substring(0, 65000)}...` : data
+            const plan = "terraform\n" + planOut.length > 63000 ? `${planOut.substring(0, 63000)}...` : planOut
 
             const output = `#### |${{ inputs.operation }}| Terraform Format and Style: \`${{ steps.fmt.outcome }}\` ${{ steps.fmt.outcome == 'Success' && '✅' || '❌'}}
             #### Terraform Initialization: \`${{ steps.init.outcome }}\` ${{ steps.init.outcome == 'Success' && '✅' || '❌'}}
