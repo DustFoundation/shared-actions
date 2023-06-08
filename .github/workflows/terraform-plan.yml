@@ -83,7 +83,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { readFile } = require("fs/promises")
-            const planOut = await readFile('plan.out', 'utf8')
+            const data = await readFile('plan.out', 'utf8')
             
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -95,7 +95,7 @@ jobs:
             })
             
             const workflowSummaryURL = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-            const plan = "terraform\n" + planOut.length > 60000 ? `_The plan is too large to include in a comment, open the [workflow summary](${workflowSummaryURL}) to view it._` : planOut
+            const plan = '```\n' + data + '\n```'
 
             const output = `#### |${{ inputs.operation }}| Terraform Format and Style: \`${{ steps.fmt.outcome }}\` ${{ steps.fmt.outcome == 'Success' && '✅' || '❌'}}
             #### Terraform Initialization: \`${{ steps.init.outcome }}\` ${{ steps.init.outcome == 'Success' && '✅' || '❌'}}
@@ -104,8 +104,7 @@ jobs:
 
             <details><summary>⏩⏩⏩ Show Plan ⏪⏪⏪</summary>
 
-            \`\`\`${plan}\`\`\`
-
+            ${plan.length <= MAX_PLAN_LENGTH ? plan : `_The plan is too large to include in a comment, open the [workflow summary](${workflowSummaryURL}) to view it._`}
             </details>`;
             if (botComment) {
               github.rest.issues.updateComment({
